@@ -9,7 +9,6 @@
     <ItemGroup>
       <Folder Include="ExternalServices\" />
       <Folder Include="Migrations\" />
-      <Folder Include="Repositories\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,6 +25,11 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SmaguciaiCore\SmaguciaiCore.csproj" />
+      <ProjectReference Include="..\SmaguciaiDomain\SmaguciaiDomain.csproj" />
     </ItemGroup>
 
 </Project>

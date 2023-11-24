@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmaguciaiInfrastructure.Data;
 
@@ -11,9 +12,10 @@ using SmaguciaiInfrastructure.Data;
 namespace SmaguciaiInfrastructure.Migrations
 {
     [DbContext(typeof(SmaguciaiDataContext))]
-    partial class SmaguciaiDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231117171118_Update")]
+    partial class Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,6 +40,21 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("SmaguciaiDomain.Entities.Gender", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("GenderName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Genders");
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.Manufacturer", b =>
@@ -70,85 +87,19 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.ToTable("Manufacturers");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Photo", b =>
+            modelBuilder.Entity("SmaguciaiDomain.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AlterText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("URL")
+                    b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Photos");
-                });
-
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Product", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("ManufacturerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("RatingAmount")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("RatingAverage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("WarrantyPeriod")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("ManufacturerId");
-
-                    b.ToTable("Products");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
@@ -164,8 +115,8 @@ namespace SmaguciaiInfrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GenderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -190,8 +141,8 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.Property<int>("ReviewCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -199,52 +150,40 @@ namespace SmaguciaiInfrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenderId");
+
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Photo", b =>
+            modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
                 {
-                    b.HasOne("SmaguciaiDomain.Entities.Product", "Product")
-                        .WithMany("Photos")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("SmaguciaiDomain.Entities.Gender", "Gender")
+                        .WithMany("Users")
+                        .HasForeignKey("GenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Product", b =>
-                {
-                    b.HasOne("SmaguciaiDomain.Entities.Category", "Category")
-                        .WithMany("Product")
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("SmaguciaiDomain.Entities.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmaguciaiDomain.Entities.Manufacturer", "Manufacturer")
-                        .WithMany("Product")
-                        .HasForeignKey("ManufacturerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Gender");
 
-                    b.Navigation("Category");
-
-                    b.Navigation("Manufacturer");
+                    b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Category", b =>
+            modelBuilder.Entity("SmaguciaiDomain.Entities.Gender", b =>
                 {
-                    b.Navigation("Product");
+                    b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Manufacturer", b =>
+            modelBuilder.Entity("SmaguciaiDomain.Entities.Role", b =>
                 {
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Product", b =>
-                {
-                    b.Navigation("Photos");
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
