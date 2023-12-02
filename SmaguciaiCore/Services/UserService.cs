@@ -6,19 +6,20 @@ using SmaguciaiCore.Interfaces.Services;
 using SmaguciaiCore.Requests.User;
 using SmaguciaiCore.Responses.User;
 using SmaguciaiDomain.Entities;
-
 namespace SmaguciaiCore.Services;
 
 public class UserService : IUserService
 {
+    private readonly IPasswordEditEmailService _passwordEditEmailService;
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
     private static readonly Encoding HashEncoding = Encoding.UTF8;
 
-    public UserService(IUserRepository userRepository, IMapper mapper)
+    public UserService(IUserRepository userRepository, IMapper mapper, IPasswordEditEmailService passwordEditEmailService)
     {
         _userRepository = userRepository;
         _mapper = mapper;
+        _passwordEditEmailService = passwordEditEmailService;
     }
     public UserResponse GetById(Guid id)
     {
@@ -76,6 +77,10 @@ public class UserService : IUserService
             {
                 throw new Exception("Incorrect user password");
             }
+            if (_passwordEditEmailService.PasswordEditEmail(placeToUpdate.Email))
+            {
+                throw new Exception("Email error");
+            }
             var user = _mapper.Map<User>(request);
             user.Id = id;
             var res = _userRepository.EditPassword(user);
@@ -86,4 +91,5 @@ public class UserService : IUserService
             return false;
         }
     }
+
 }
