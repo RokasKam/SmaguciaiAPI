@@ -33,4 +33,45 @@ public class UserRepository : IUserRepository
         var user = _dbContext.Users.FirstOrDefault(u => u.Id == id);
         return user;    
     }
+    
+    public bool EditUser(User user)
+    {
+        try
+        {
+            var local = _dbContext.Users.Local.FirstOrDefault(oldEntity => oldEntity.Id == user.Id);
+            if (local != null)
+            {
+                _dbContext.Entry(local).State = EntityState.Detached;
+            }
+
+            _dbContext.Entry(user).State = EntityState.Modified;
+            _dbContext.SaveChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public bool DeleteUser(Guid id)
+    {
+        try
+        {
+            var place = _dbContext.Users.SingleOrDefault(entity => entity.Id == id);
+
+            if (place is null)
+            {
+                throw new Exception("Place not found");
+            }
+
+            _dbContext.Users.Remove(place);
+            _dbContext.SaveChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

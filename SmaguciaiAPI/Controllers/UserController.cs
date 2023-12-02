@@ -42,4 +42,16 @@ public class UserController : BaseController
         var user = _userService.GetById(Guid.Parse(User.FindFirstValue(ClaimTypes.Sid)));
         return Ok(user);
     }
+    [HttpPut("{id:guid}")]
+    public IActionResult EditUser(Guid id, UserEditRequest request)
+    {
+        var res = _userService.EditUser(id,request);
+        return Ok(res);
+    }
+    [HttpDelete("{id:guid}")]
+    public IActionResult DeleteUser(Guid id)
+    {
+        _userService.DeleteUser(id);
+        return Ok();
+    }
 }

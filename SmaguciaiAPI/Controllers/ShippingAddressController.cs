@@ -32,4 +32,17 @@ public class ShippingAddressController : BaseController
         var shippingAddress = _shippingAddressService.GetById(Guid.Parse(User.FindFirstValue(ClaimTypes.Sid)));
         return Ok(shippingAddress);
     }
+    
+    [HttpPut("{id:guid}")]
+    public IActionResult EditShippingAddress(Guid id, ShippingAddressRequest request)
+    {
+        var res = _shippingAddressService.EditShippingAddress(id,request);
+        return Ok(res);
+    }
+    [HttpDelete("{id:guid}")]
+    public IActionResult DeleteShippingAddress(Guid id)
+    {
+        _shippingAddressService.DeleteShippingAddress(id);
+        return Ok();
+    }
 }

@@ -1,4 +1,5 @@
-﻿using SmaguciaiCore.Interfaces.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using SmaguciaiCore.Interfaces.Repositories;
 using SmaguciaiDomain.Entities;
 using SmaguciaiInfrastructure.Data;
 
@@ -31,5 +32,46 @@ public class ShippingAddressRepository : IShippingAddressRepository
     {
         var shippingAddress = _dbContext.ShippingAddresses.FirstOrDefault(u => u.Id == id);
         return shippingAddress;    
+    }
+    
+    public bool EditShippingAddress(ShippingAddress shippingAddress)
+    {
+        try
+        {
+            var local = _dbContext.ShippingAddresses.Local.FirstOrDefault(oldEntity => oldEntity.Id == shippingAddress.Id);
+            if (local != null)
+            {
+                _dbContext.Entry(local).State = EntityState.Detached;
+            }
+
+            _dbContext.Entry(shippingAddress).State = EntityState.Modified;
+            _dbContext.SaveChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public bool DeleteShippingAddress(Guid id)
+    {
+        try
+        {
+            var place = _dbContext.ShippingAddresses.SingleOrDefault(entity => entity.Id == id);
+
+            if (place is null)
+            {
+                throw new Exception("Place not found");
+            }
+
+            _dbContext.ShippingAddresses.Remove(place);
+            _dbContext.SaveChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

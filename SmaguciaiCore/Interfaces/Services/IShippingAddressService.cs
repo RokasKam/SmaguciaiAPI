@@ -8,4 +8,8 @@ public interface IShippingAddressService
 {
     bool AddNewShippingAddress(ShippingAddressRequest request);
     ShippingAddressResponse GetById(Guid id);
+    
+    bool EditShippingAddress(Guid id,ShippingAddressRequest request);
+
+    bool DeleteShippingAddress(Guid id);
 }
