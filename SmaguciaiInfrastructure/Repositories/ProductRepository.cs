@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SmaguciaiCore.Interfaces.Repositories;
+using SmaguciaiCore.Requests.Product;
 using SmaguciaiDomain.Entities;
 using SmaguciaiInfrastructure.Data;
 
@@ -76,5 +77,59 @@ public class ProductRepository : IProductRepository
         {
             return false;
         }
+    }
+        
+    public IEnumerable<Product> GetAll(ProductParameters productParameters)
+    {
+        
+        IQueryable<Product> entities = _dbContext.Products;
+
+        if (productParameters.Manufacturerid != null)
+        {
+            entities = entities
+                .Where(i => i.ManufacturerId == productParameters.Manufacturerid);
+        }
+        if (productParameters.Categoryid != null)
+        {
+            entities = entities
+                .Where(i => i.CategoryId == productParameters.Categoryid);
+        }
+        if (productParameters.gender != null)
+        {
+            entities = entities
+                .Where(i => i.Gender == productParameters.gender);
+        }
+        if (productParameters.priceFrom != null && productParameters.priceTo != null)
+        {
+            entities = entities
+                .Where(i => i.Price >= productParameters.priceFrom && i.Price <= productParameters.priceTo);
+        }
+
+        if (productParameters.orderby == Orderby.PriceAcending)
+        {
+            entities = entities
+                .OrderBy(x => x.Price);
+        }
+        
+        if (productParameters.orderby == Orderby.PriceDescending)
+        {
+            entities = entities
+                .OrderByDescending(x => x.Price);
+        }
+        if (productParameters.orderby == Orderby.RatingAcending)
+        {
+            entities = entities
+                .OrderBy(x => x.RatingAverage);
+        }
+        if (productParameters.orderby == Orderby.RatingDescending)
+        {
+            entities = entities
+                .OrderByDescending(x => x.RatingAverage);
+        }
+        entities = entities
+            .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
+            .Take(productParameters.PageSize);
+
+        return entities.ToList();
     }
 }

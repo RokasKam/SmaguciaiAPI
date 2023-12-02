@@ -11,4 +11,7 @@ public interface IProductService
     Product GetById(Guid id);
 
     bool DeleteProduct(Guid id);
+    
+    List<Product> GetAll(ProductParameters productParameters);
+    
 }

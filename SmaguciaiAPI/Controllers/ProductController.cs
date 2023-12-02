@@ -38,4 +38,9 @@ public class ProductController : BaseController
         _productService.DeleteProduct(id);
         return Ok();
     }
+    [HttpGet]
+    public IActionResult GetAll([FromQuery] ProductParameters placesParameters)
+    {
+        return Ok(_productService.GetAll(placesParameters));
+    }
 }

@@ -64,4 +64,10 @@ public class ProductService : IProductService
             return false;
         }
     }
+    public List<Product> GetAll(ProductParameters productParameters)
+    {
+        var products = _productRepository.GetAll(productParameters);
+        var placesResponseList = products.Select(x => _mapper.Map<Product>(x)).ToList();
+        return placesResponseList;
+    }
 }
