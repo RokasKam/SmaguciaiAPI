@@ -74,4 +74,23 @@ public class UserRepository : IUserRepository
             return false;
         }
     }
+    public bool EditPassword(User user)
+    {
+        try
+        {
+            var local = _dbContext.Users.Local.FirstOrDefault(oldEntity => oldEntity.Id == user.Id);
+            if (local != null)
+            {
+                _dbContext.Entry(local).State = EntityState.Detached;
+            }
+
+            _dbContext.Entry(user).State = EntityState.Modified;
+            _dbContext.SaveChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }

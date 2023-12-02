@@ -54,4 +54,10 @@ public class UserController : BaseController
         _userService.DeleteUser(id);
         return Ok();
     }
+    [HttpPut("{id:guid}")]
+    public IActionResult EditPassword(Guid id, PasswordEditRequest request)
+    {
+        var res = _userService.EditPassword(id,request);
+        return Ok(res);
+    }
 }

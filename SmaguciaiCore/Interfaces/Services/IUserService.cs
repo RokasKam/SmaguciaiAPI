@@ -9,4 +9,6 @@ public interface IUserService
     bool EditUser(Guid id,UserEditRequest request);
 
     bool DeleteUser(Guid id);
+    bool EditPassword(Guid id,PasswordEditRequest request);
+
 }

@@ -10,4 +10,6 @@ public interface IUserRepository
     bool EditUser(User user);
 
     bool DeleteUser(Guid id);
+    bool EditPassword(User user);
+
 }

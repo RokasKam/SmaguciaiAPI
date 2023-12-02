@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using AutoMapper;
 using SmaguciaiCore.Interfaces.Repositories;
 using SmaguciaiCore.Interfaces.Services;
@@ -11,6 +13,7 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
+    private static readonly Encoding HashEncoding = Encoding.UTF8;
 
     public UserService(IUserRepository userRepository, IMapper mapper)
     {
@@ -49,6 +52,33 @@ public class UserService : IUserService
         try
         {
             _userRepository.DeleteUser(id);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
+    public bool EditPassword(Guid id,PasswordEditRequest request)
+    {
+        try
+        {
+            var placeToUpdate = _userRepository.GetById(id);
+            if (placeToUpdate is null)
+            {
+                throw new Exception("Place with provided id does not exist");
+            }
+            using var hmac = new HMACSHA512(placeToUpdate.PasswordSalt);
+            var computedHash = hmac.ComputeHash(HashEncoding.GetBytes(request.OldPassword));
+
+            if (!computedHash.SequenceEqual(placeToUpdate.PasswordHash))
+            {
+                throw new Exception("Incorrect user password");
+            }
+            var user = _mapper.Map<User>(request);
+            user.Id = id;
+            var res = _userRepository.EditPassword(user);
             return true;
         }
         catch

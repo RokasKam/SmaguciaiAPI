@@ -13,5 +13,6 @@ public class UserMappingProfile : Profile
         CreateMap<RegisterRequest, User>();
         CreateMap<LoginRequest, User>();
         CreateMap<UserEditRequest, User>();
+        CreateMap<PasswordEditRequest, User>();
     }
 }
