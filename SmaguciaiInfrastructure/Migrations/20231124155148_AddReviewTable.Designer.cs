@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmaguciaiInfrastructure.Data;
 
@@ -11,9 +12,10 @@ using SmaguciaiInfrastructure.Data;
 namespace SmaguciaiInfrastructure.Migrations
 {
     [DbContext(typeof(SmaguciaiDataContext))]
-    partial class SmaguciaiDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231124155148_AddReviewTable")]
+    partial class AddReviewTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,9 +168,6 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.Property<decimal>("Rating")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("Reported")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -178,9 +177,11 @@ namespace SmaguciaiInfrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductID");
+                    b.HasIndex("ProductID")
+                        .IsUnique();
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserID")
+                        .IsUnique();
 
                     b.ToTable("Review");
                 });
@@ -269,14 +270,14 @@ namespace SmaguciaiInfrastructure.Migrations
             modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
                 {
                     b.HasOne("SmaguciaiDomain.Entities.Product", "Product")
-                        .WithMany("Review")
-                        .HasForeignKey("ProductID")
+                        .WithOne("Review")
+                        .HasForeignKey("SmaguciaiDomain.Entities.Review", "ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SmaguciaiDomain.Entities.User", "User")
-                        .WithMany("Review")
-                        .HasForeignKey("UserID")
+                        .WithOne("Review")
+                        .HasForeignKey("SmaguciaiDomain.Entities.Review", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -299,12 +300,14 @@ namespace SmaguciaiInfrastructure.Migrations
                 {
                     b.Navigation("Photos");
 
-                    b.Navigation("Review");
+                    b.Navigation("Review")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
                 {
-                    b.Navigation("Review");
+                    b.Navigation("Review")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

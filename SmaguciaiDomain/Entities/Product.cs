@@ -17,5 +17,6 @@ public class Product : BaseEntity
     public Guid ManufacturerId { get; set; }
     public Manufacturer Manufacturer { get; set; }
     public ICollection<Photo> Photos { get; set; }
+    public ICollection<Review> Review { get; set; }
     
 }
