@@ -16,10 +16,52 @@ public class ProductService : IProductService
         _productRepository = productRepository;
         _mapper = mapper;
     }
+    
+    public Product GetById(Guid id)
+    {
+        var place = _productRepository.GetById(id);
+        var placeResponse = _mapper.Map<Product>(place);
+
+        return placeResponse;
+    }
+    
     public bool AddNewProduct(ProductRequest request)
     {
         var product = _mapper.Map<Product>(request);
         var res = _productRepository.AddNewProduct(product);
         return res;
+    }
+    public bool EditProduct(Guid id,ProductRequest request)
+    {
+        try
+        {
+            var placeToUpdate = _productRepository.GetById(id);
+            if (placeToUpdate is null)
+            {
+                throw new Exception("Place with provided id does not exist");
+            }
+
+            var product = _mapper.Map<Product>(request);
+            product.Id = id;
+            var res = _productRepository.EditProduct(product);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public bool DeleteProduct(Guid id)
+    {
+        try
+        {
+            _productRepository.DeleteProduct(id);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

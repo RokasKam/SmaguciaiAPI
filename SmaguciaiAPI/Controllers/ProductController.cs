@@ -13,10 +13,29 @@ public class ProductController : BaseController
     {
         _productService = productService;
     }
+    
+    [HttpGet("{id:guid}")]
+    public IActionResult GetById(Guid id)
+    {
+        return Ok(_productService.GetById(id));
+    }
+    
     [HttpPost]
     public IActionResult AddNewProduct(ProductRequest request)
     {
         var res = _productService.AddNewProduct(request);
         return Ok(res);
+    }
+    [HttpPut("{id:guid}")]
+    public IActionResult EditProduct(Guid id, ProductRequest request)
+    {
+        var res = _productService.EditProduct(id,request);
+        return Ok(res);
+    }
+    [HttpDelete("{id:guid}")]
+    public IActionResult DeleteProduct(Guid id)
+    {
+        _productService.DeleteProduct(id);
+        return Ok();
     }
 }
