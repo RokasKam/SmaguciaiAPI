@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmaguciaiInfrastructure.Data;
 
@@ -11,9 +12,10 @@ using SmaguciaiInfrastructure.Data;
 namespace SmaguciaiInfrastructure.Migrations
 {
     [DbContext(typeof(SmaguciaiDataContext))]
-    partial class SmaguciaiDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231202151039_shippingAddress")]
+    partial class shippingAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,38 +153,12 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
             modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ProductID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Rating")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("Reported")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Review");
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -218,7 +194,6 @@ namespace SmaguciaiInfrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ShippingAddresses");
-
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
@@ -302,22 +277,6 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.Navigation("Manufacturer");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
-                {
-                    b.HasOne("SmaguciaiDomain.Entities.Product", "Product")
-                        .WithMany("Review")
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmaguciaiDomain.Entities.User", "User")
-                        .WithMany("Review")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
             modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
                 {
                     b.HasOne("SmaguciaiDomain.Entities.User", "User")
@@ -325,7 +284,7 @@ namespace SmaguciaiInfrastructure.Migrations
                         .HasForeignKey("SmaguciaiDomain.Entities.ShippingAddress", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                        
+
                     b.Navigation("User");
                 });
 
@@ -342,13 +301,6 @@ namespace SmaguciaiInfrastructure.Migrations
             modelBuilder.Entity("SmaguciaiDomain.Entities.Product", b =>
                 {
                     b.Navigation("Photos");
-
-                    b.Navigation("Review");
-                });
-
-            modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
-                {
-                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
