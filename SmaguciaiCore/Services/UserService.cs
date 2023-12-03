@@ -63,33 +63,38 @@ public class UserService : IUserService
     
     public bool EditPassword(Guid id,PasswordEditRequest request)
     {
-        try
+        var userToEdit = _userRepository.GetById(id);
+        if (userToEdit is null)
         {
-            var placeToUpdate = _userRepository.GetById(id);
-            if (placeToUpdate is null)
-            {
-                throw new Exception("Place with provided id does not exist");
-            }
-            using var hmac = new HMACSHA512(placeToUpdate.PasswordSalt);
-            var computedHash = hmac.ComputeHash(HashEncoding.GetBytes(request.OldPassword));
+            throw new Exception("User with provided id does not exist");
+        }
+        using var hmac = new HMACSHA512(userToEdit.PasswordSalt);
+        var computedHash = hmac.ComputeHash(HashEncoding.GetBytes(request.OldPassword));
 
-            if (!computedHash.SequenceEqual(placeToUpdate.PasswordHash))
-            {
-                throw new Exception("Incorrect user password");
-            }
-            if (_passwordEditEmailService.PasswordEditEmail(placeToUpdate.Email))
-            {
-                throw new Exception("Email error");
-            }
-            var user = _mapper.Map<User>(request);
-            user.Id = id;
-            var res = _userRepository.EditPassword(user);
-            return true;
+        if (!computedHash.SequenceEqual(userToEdit.PasswordHash))
+        { 
+            throw new Exception("Incorrect user password");
         }
-        catch
-        {
-            return false;
+        var password = HashPassword(request.Password);
+        userToEdit.PasswordHash = password.PasswordHash;
+        userToEdit.PasswordSalt = password.PasswordSalt; 
+        var res = _userRepository.EditPassword(userToEdit);
+        if (!_passwordEditEmailService.PasswordEditEmail(userToEdit.Email))
+        { 
+            throw new Exception("Email error");
         }
+        return true;
+    }
+    private HashPasswordResponse HashPassword(string password)
+    {
+        using var hmac = new HMACSHA512();
+
+        var response = new HashPasswordResponse(
+            PasswordSalt: hmac.Key,
+            PasswordHash: hmac.ComputeHash(HashEncoding.GetBytes(password))
+        );
+
+        return response;
     }
 
 }

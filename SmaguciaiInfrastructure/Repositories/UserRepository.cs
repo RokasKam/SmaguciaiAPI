@@ -44,6 +44,8 @@ public class UserRepository : IUserRepository
                 _dbContext.Entry(local).State = EntityState.Detached;
             }
 
+            user.PasswordHash = local.PasswordHash;
+            user.PasswordSalt = local.PasswordSalt;
             _dbContext.Entry(user).State = EntityState.Modified;
             _dbContext.SaveChanges();
             return true;
@@ -83,7 +85,6 @@ public class UserRepository : IUserRepository
             {
                 _dbContext.Entry(local).State = EntityState.Detached;
             }
-
             _dbContext.Entry(user).State = EntityState.Modified;
             _dbContext.SaveChanges();
             return true;

@@ -9,15 +9,11 @@ namespace SmaguciaiAPI.Controllers;
 
 public class ShippingAddressController : BaseController
 {
-    private readonly IAuthService _authService;
     private readonly IShippingAddressService _shippingAddressService;
-    private readonly IJwtService _jwtService;
     
-    public ShippingAddressController(IAuthService authService, IShippingAddressService shippingAddressService, IJwtService jwtService)
+    public ShippingAddressController(IShippingAddressService shippingAddressService)
     {
-        _authService = authService;
         _shippingAddressService = shippingAddressService;
-        _jwtService = jwtService;
     }
     [HttpPost]
     public IActionResult AddNewShippingAddress(ShippingAddressRequest request)
@@ -25,11 +21,10 @@ public class ShippingAddressController : BaseController
         var res = _shippingAddressService.AddNewShippingAddress(request);
         return Ok(res);
     }
-    [HttpGet]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult GetMe()
+    [HttpGet("{id:guid}")]
+    public IActionResult GetById(Guid id)
     {
-        var shippingAddress = _shippingAddressService.GetById(Guid.Parse(User.FindFirstValue(ClaimTypes.Sid)));
+        var shippingAddress = _shippingAddressService.GetById(id);
         return Ok(shippingAddress);
     }
     
