@@ -1,9 +1,10 @@
 ﻿using SmaguciaiCore.Requests.Product;
+using SmaguciaiCore.Responses.Category;
 using SmaguciaiDomain.Entities;
 
 namespace SmaguciaiCore.Interfaces.Services;
 
 public interface ICategoryService
 {
-    List<Category> GetAll();
+    List<CategoyResponse> GetAll();
 }

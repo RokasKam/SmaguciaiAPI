@@ -62,14 +62,14 @@ public class ProductRepository : IProductRepository
     {
         try
         {
-            var place = _dbContext.Products.SingleOrDefault(entity => entity.Id == id);
+            var product = _dbContext.Products.SingleOrDefault(entity => entity.Id == id);
 
-            if (place is null)
+            if (product is null)
             {
-                throw new Exception("Place not found");
+                throw new Exception("Product not found");
             }
 
-            _dbContext.Products.Remove(place);
+            _dbContext.Products.Remove(product);
             _dbContext.SaveChanges();
             return true;
         }

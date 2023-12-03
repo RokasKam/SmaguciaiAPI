@@ -35,8 +35,7 @@ public class ProductController : BaseController
     [HttpDelete("{id:guid}")]
     public IActionResult DeleteProduct(Guid id)
     {
-        _productService.DeleteProduct(id);
-        return Ok();
+        return Ok(_productService.DeleteProduct(id));
     }
     [HttpGet]
     public IActionResult GetAll([FromQuery] ProductParameters placesParameters)

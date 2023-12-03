@@ -2,6 +2,7 @@ using AutoMapper;
 using SmaguciaiCore.Interfaces.Repositories;
 using SmaguciaiCore.Interfaces.Services;
 using SmaguciaiCore.Requests.Product;
+using SmaguciaiCore.Responses.Product;
 using SmaguciaiDomain.Entities;
 
 namespace SmaguciaiCore.Services;
@@ -17,12 +18,12 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
     
-    public Product GetById(Guid id)
+    public ProductResponse GetById(Guid id)
     {
-        var place = _productRepository.GetById(id);
-        var placeResponse = _mapper.Map<Product>(place);
+        var product = _productRepository.GetById(id);
+        var productResponse = _mapper.Map<ProductResponse>(product);
 
-        return placeResponse;
+        return productResponse;
     }
     
     public bool AddNewProduct(ProductRequest request)
@@ -35,8 +36,8 @@ public class ProductService : IProductService
     {
         try
         {
-            var placeToUpdate = _productRepository.GetById(id);
-            if (placeToUpdate is null)
+            var productToUpdate = _productRepository.GetById(id);
+            if (productToUpdate is null)
             {
                 throw new Exception("Place with provided id does not exist");
             }
@@ -64,10 +65,10 @@ public class ProductService : IProductService
             return false;
         }
     }
-    public List<Product> GetAll(ProductParameters productParameters)
+    public List<ProductResponse> GetAll(ProductParameters productParameters)
     {
         var products = _productRepository.GetAll(productParameters);
-        var placesResponseList = products.Select(x => _mapper.Map<Product>(x)).ToList();
-        return placesResponseList;
+        var productsResponseList = products.Select(x => _mapper.Map<ProductResponse>(x)).ToList();
+        return productsResponseList;
     }
 }
