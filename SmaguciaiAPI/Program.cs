@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using SmaguciaiCore.Interfaces.Repositories;
 using SmaguciaiCore.Interfaces.Services;
 using SmaguciaiCore.Services;
+using SmaguciaiInfrastructure.ExternalServices;
 using SmaguciaiInfrastructure.Repositories;
 
 
@@ -31,10 +32,12 @@ builder.Services.AddSingleton(setting);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IPasswordEditEmailService, PasswordEditEmailServices>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IShippingAddressService, ShippingAddressService>();
+builder.Services.AddScoped<IShippingAddressRepository, ShippingAddressRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var jwtSettings = builder.Services.BuildServiceProvider().GetService<JwtSettings>();

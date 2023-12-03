@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmaguciaiInfrastructure.Data;
 
@@ -11,9 +12,10 @@ using SmaguciaiInfrastructure.Data;
 namespace SmaguciaiInfrastructure.Migrations
 {
     [DbContext(typeof(SmaguciaiDataContext))]
-    partial class SmaguciaiDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231202151039_shippingAddress")]
+    partial class shippingAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
