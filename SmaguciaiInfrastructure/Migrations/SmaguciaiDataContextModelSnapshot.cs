@@ -152,11 +152,11 @@ namespace SmaguciaiInfrastructure.Migrations
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
-            modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
@@ -183,6 +183,14 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Review");
+                });
+
+            modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -218,7 +226,6 @@ namespace SmaguciaiInfrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("ShippingAddresses");
-
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
@@ -318,6 +325,9 @@ namespace SmaguciaiInfrastructure.Migrations
 
                     b.Navigation("Product");
 
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
                 {
                     b.HasOne("SmaguciaiDomain.Entities.User", "User")
@@ -325,7 +335,7 @@ namespace SmaguciaiInfrastructure.Migrations
                         .HasForeignKey("SmaguciaiDomain.Entities.ShippingAddress", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                        
+
                     b.Navigation("User");
                 });
 
@@ -349,10 +359,7 @@ namespace SmaguciaiInfrastructure.Migrations
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
                 {
                     b.Navigation("Review");
-                });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
-                {
                     b.Navigation("ShippingAddress")
                         .IsRequired();
                 });

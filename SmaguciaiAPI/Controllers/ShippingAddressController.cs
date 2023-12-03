@@ -37,7 +37,6 @@ public class ShippingAddressController : BaseController
     [HttpDelete("{id:guid}")]
     public IActionResult DeleteShippingAddress(Guid id)
     {
-        _shippingAddressService.DeleteShippingAddress(id);
-        return Ok();
+        return Ok(_shippingAddressService.DeleteShippingAddress(id));
     }
 }

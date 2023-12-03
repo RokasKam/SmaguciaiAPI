@@ -51,7 +51,6 @@ public class ReviewController : BaseController
     [HttpDelete("{id:guid}")]
     public IActionResult DeleteReview(Guid id)
     {
-        _reviewService.DeleteReview(id);
-        return Ok();
+        return Ok(_reviewService.DeleteReview(id));
     }
 }

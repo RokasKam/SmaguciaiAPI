@@ -51,8 +51,7 @@ public class UserController : BaseController
     [HttpDelete("{id:guid}")]
     public IActionResult DeleteUser(Guid id)
     {
-        _userService.DeleteUser(id);
-        return Ok();
+        return Ok(_userService.DeleteUser(id));
     }
     [HttpPut("{id:guid}")]
     public IActionResult EditPassword(Guid id, PasswordEditRequest request)
