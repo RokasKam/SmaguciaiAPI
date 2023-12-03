@@ -24,5 +24,6 @@ public class User : BaseEntity
     public int ReviewCount { get; set; }
     public Role Role { get; set; }
     public Gender Gender { get; set; }
+    public ICollection<Review> Review { get; set; }
     public ShippingAddress ShippingAddress { get; set; }
 }

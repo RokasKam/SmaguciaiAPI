@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmaguciaiInfrastructure.Data;
 
@@ -11,9 +12,10 @@ using SmaguciaiInfrastructure.Data;
 namespace SmaguciaiInfrastructure.Migrations
 {
     [DbContext(typeof(SmaguciaiDataContext))]
-    partial class SmaguciaiDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231202181911_Editited review")]
+    partial class Edititedreview
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,11 +154,11 @@ namespace SmaguciaiInfrastructure.Migrations
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
-            modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("DateAdded")
                         .HasColumnType("datetime2");
 
@@ -183,42 +185,6 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.HasIndex("UserID");
 
                     b.ToTable("Review");
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FlatNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HouseNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("ShippingAddresses");
-
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
@@ -318,14 +284,6 @@ namespace SmaguciaiInfrastructure.Migrations
 
                     b.Navigation("Product");
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
-                {
-                    b.HasOne("SmaguciaiDomain.Entities.User", "User")
-                        .WithOne("ShippingAddress")
-                        .HasForeignKey("SmaguciaiDomain.Entities.ShippingAddress", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                        
                     b.Navigation("User");
                 });
 
@@ -349,12 +307,6 @@ namespace SmaguciaiInfrastructure.Migrations
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
                 {
                     b.Navigation("Review");
-                });
-
-            modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
-                {
-                    b.Navigation("ShippingAddress")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
