@@ -18,5 +18,5 @@ public class Product : BaseEntity
     public Manufacturer Manufacturer { get; set; }
     public ICollection<Photo> Photos { get; set; }
     public ICollection<Review> Review { get; set; }
-    
+    public ICollection<OrderPorduct> OrderPorducts { get; set; }
 }

@@ -11,4 +11,5 @@ public class ShippingAddress : BaseEntity
     public int? FlatNumber { get; set; }
     public Guid UserId { get; set; }
     public User User { get; set; }
+    public ICollection<Order> Order { get; set; }
 }

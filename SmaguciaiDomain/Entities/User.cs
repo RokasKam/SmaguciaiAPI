@@ -26,4 +26,5 @@ public class User : BaseEntity
     public Gender Gender { get; set; }
     public ICollection<Review> Review { get; set; }
     public ShippingAddress ShippingAddress { get; set; }
+    public ICollection<Order> Order { get; set; }
 }
