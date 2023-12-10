@@ -22,7 +22,6 @@ public class ProductService : IProductService
     {
         var product = _productRepository.GetById(id);
         var productResponse = _mapper.Map<ProductResponse>(product);
-
         return productResponse;
     }
     
