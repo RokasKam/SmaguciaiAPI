@@ -27,4 +27,5 @@ public class User : BaseEntity
     public ICollection<Review> Review { get; set; }
     public ShippingAddress ShippingAddress { get; set; }
     public ICollection<Order> Order { get; set; }
+    public ICollection<Report> Report { get; set; }
 }

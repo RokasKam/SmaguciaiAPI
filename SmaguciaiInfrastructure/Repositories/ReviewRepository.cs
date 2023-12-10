@@ -21,6 +21,7 @@ public class ReviewRepository : IReviewRepository
             review.Reported = false;
             _dbContext.Review.Add(review);
             _dbContext.SaveChanges();
+            
             return true;
     }
 
