@@ -11,17 +11,19 @@ public class ReviewService : IReviewService
 {
     private readonly IReviewRepository _reviewRepository;
     private readonly IMapper _mapper;
-    
-    public ReviewService(IReviewRepository reviewRepository, IMapper mapper)
+    private readonly IUserRepository _userRepository;
+    public ReviewService(IReviewRepository reviewRepository, IMapper mapper, IUserRepository userRepository)
     {
         _reviewRepository = reviewRepository;
         _mapper = mapper;
+        _userRepository = userRepository;
     }
     
     public bool AddNewReview(ReviewRequest request)
     {
         var review = _mapper.Map<Review>(request);
-        var res = _reviewRepository.AddNewReview(review);
+        var user = _userRepository.GetById(request.UserId);
+        var res = _reviewRepository.AddNewReview(user, review);
         return res;
     }
 

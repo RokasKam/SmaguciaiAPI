@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using SmaguciaiCore.Interfaces.Services;
 using SmaguciaiCore.Requests.Review;
-using SmaguciaiDomain.Entities;
 
 namespace SmaguciaiAPI.Controllers;
 
@@ -17,6 +15,7 @@ public class ReviewController : BaseController
     [HttpPost]
     public IActionResult AddNewReview(ReviewRequest request)
     {
+        
         var res = _reviewService.AddNewReview(request);
         return Ok(res);
     }
