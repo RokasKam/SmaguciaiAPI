@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmaguciaiInfrastructure.Data;
 
@@ -11,9 +12,10 @@ using SmaguciaiInfrastructure.Data;
 namespace SmaguciaiInfrastructure.Migrations
 {
     [DbContext(typeof(SmaguciaiDataContext))]
-    partial class SmaguciaiDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231205101044_AddReported")]
+    partial class AddReported
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,14 +52,16 @@ namespace SmaguciaiInfrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreationDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Discount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ExperationDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -104,6 +108,7 @@ namespace SmaguciaiInfrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DiscountcodeId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsPaid")
@@ -124,8 +129,7 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DiscountcodeId")
-                        .IsUnique()
-                        .HasFilter("[DiscountcodeId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("ShippingAddressId");
 
@@ -264,7 +268,7 @@ namespace SmaguciaiInfrastructure.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Reports");
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
@@ -399,7 +403,9 @@ namespace SmaguciaiInfrastructure.Migrations
                 {
                     b.HasOne("SmaguciaiDomain.Entities.DiscountCode", "DiscountCode")
                         .WithOne("Order")
-                        .HasForeignKey("SmaguciaiDomain.Entities.Order", "DiscountcodeId");
+                        .HasForeignKey("SmaguciaiDomain.Entities.Order", "DiscountcodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SmaguciaiDomain.Entities.ShippingAddress", "ShippingAddress")
                         .WithMany("Order")
@@ -525,7 +531,8 @@ namespace SmaguciaiInfrastructure.Migrations
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.DiscountCode", b =>
                 {
-                    b.Navigation("Order");
+                    b.Navigation("Order")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.Manufacturer", b =>
