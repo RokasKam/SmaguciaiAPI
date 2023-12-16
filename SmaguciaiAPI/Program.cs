@@ -44,6 +44,10 @@ builder.Services.AddScoped<IManufacturerService, ManufacturerService>();
 builder.Services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
 builder.Services.AddScoped<IShippingAddressService, ShippingAddressService>();
 builder.Services.AddScoped<IShippingAddressRepository, ShippingAddressRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderProductRepository, OrderProductRepository>();
+builder.Services.AddScoped<IOrderProductService, OrderProductService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var jwtSettings = builder.Services.BuildServiceProvider().GetService<JwtSettings>();
@@ -100,7 +104,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 var app = builder.Build();
-
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed(origin => true) // allow any origin
+    .AllowCredentials());
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

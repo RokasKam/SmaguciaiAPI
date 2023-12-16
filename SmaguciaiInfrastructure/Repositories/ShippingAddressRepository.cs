@@ -28,6 +28,11 @@ public class ShippingAddressRepository : IShippingAddressRepository
         }
     }
 
+    public ShippingAddress GetByUserId(Guid id)
+    {
+        var shippingAddress = _dbContext.ShippingAddresses.FirstOrDefault(u => u.UserId == id);
+        return shippingAddress;    
+    }
     public ShippingAddress GetById(Guid id)
     {
         var shippingAddress = _dbContext.ShippingAddresses.FirstOrDefault(u => u.Id == id);
@@ -36,22 +41,15 @@ public class ShippingAddressRepository : IShippingAddressRepository
     
     public bool EditShippingAddress(ShippingAddress shippingAddress)
     {
-        try
+        var local = _dbContext.ShippingAddresses.Local.FirstOrDefault(oldEntity => oldEntity.Id == shippingAddress.Id);
+        if (local != null)
         {
-            var local = _dbContext.ShippingAddresses.Local.FirstOrDefault(oldEntity => oldEntity.Id == shippingAddress.Id);
-            if (local != null)
-            {
-                _dbContext.Entry(local).State = EntityState.Detached;
-            }
+            _dbContext.Entry(local).State = EntityState.Detached;
+        }
 
-            _dbContext.Entry(shippingAddress).State = EntityState.Modified;
-            _dbContext.SaveChanges();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        _dbContext.Entry(shippingAddress).State = EntityState.Modified;
+        _dbContext.SaveChanges();
+        return true;
     }
 
     public bool DeleteShippingAddress(Guid id)
