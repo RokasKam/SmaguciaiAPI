@@ -11,5 +11,5 @@ public interface IAuthService
 
     UserResponse Login(LoginRequest login);
 
-    bool Register(RegisterRequest register);
+    Guid Register(RegisterRequest register);
 }
