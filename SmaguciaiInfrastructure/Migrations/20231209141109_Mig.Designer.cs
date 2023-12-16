@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmaguciaiInfrastructure.Data;
 
@@ -11,9 +12,10 @@ using SmaguciaiInfrastructure.Data;
 namespace SmaguciaiInfrastructure.Migrations
 {
     [DbContext(typeof(SmaguciaiDataContext))]
-    partial class SmaguciaiDataContextModelSnapshot : ModelSnapshot
+    [Migration("20231209141109_Mig")]
+    partial class Mig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,14 +52,16 @@ namespace SmaguciaiInfrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreationDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Discount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpirationDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ExperationDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -237,34 +241,6 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.HasIndex("ManufacturerId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Report", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("ReviewId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReviewId");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
@@ -469,25 +445,6 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.Navigation("Manufacturer");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Report", b =>
-                {
-                    b.HasOne("SmaguciaiDomain.Entities.Review", "Review")
-                        .WithMany("Report")
-                        .HasForeignKey("ReviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmaguciaiDomain.Entities.User", "User")
-                        .WithMany("Report")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Review");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
                 {
                     b.HasOne("SmaguciaiDomain.Entities.Product", "Product")
@@ -547,11 +504,6 @@ namespace SmaguciaiInfrastructure.Migrations
                     b.Navigation("Review");
                 });
 
-            modelBuilder.Entity("SmaguciaiDomain.Entities.Review", b =>
-                {
-                    b.Navigation("Report");
-                });
-
             modelBuilder.Entity("SmaguciaiDomain.Entities.ShippingAddress", b =>
                 {
                     b.Navigation("Order");
@@ -560,8 +512,6 @@ namespace SmaguciaiInfrastructure.Migrations
             modelBuilder.Entity("SmaguciaiDomain.Entities.User", b =>
                 {
                     b.Navigation("Order");
-
-                    b.Navigation("Report");
 
                     b.Navigation("Review");
 

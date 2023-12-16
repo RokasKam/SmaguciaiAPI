@@ -53,10 +53,9 @@ public class AuthService : IAuthService
         return response;
     }
 
-    public bool Register(RegisterRequest register)
+    public Guid Register(RegisterRequest register)
     {
         var registerUser = _mapper.Map<User>(register);
-        var registerResult = false;
         var existingUser = _userRepository.GetByEmailOrDefault(registerUser.Email);
         if (existingUser is not null)
         {
@@ -65,8 +64,7 @@ public class AuthService : IAuthService
         var password = HashPassword(register.Password);
         registerUser.PasswordHash = password.PasswordHash;
         registerUser.PasswordSalt = password.PasswordSalt; 
-        _userRepository.PostUser(registerUser);
-        registerResult = true;
-        return registerResult;
+        var user = _userRepository.PostUser(registerUser);
+        return user.Id;
     }
 }

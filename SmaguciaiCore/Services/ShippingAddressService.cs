@@ -27,29 +27,22 @@ public class ShippingAddressService : IShippingAddressService
     
     public ShippingAddressResponse GetById(Guid id)
     {
-        var shippingAddress = _shippingAddressRepository.GetById(id);
+        var shippingAddress = _shippingAddressRepository.GetByUserId(id);
         var response = _mapper.Map<ShippingAddressResponse>(shippingAddress);
         return response;
     }
     public bool EditShippingAddress(Guid id,ShippingAddressRequest request)
     {
-        try
-        {
-            var placeToUpdate = _shippingAddressRepository.GetById(id);
-            if (placeToUpdate is null)
-            {
-                throw new Exception("Place with provided id does not exist");
-            }
+        var placeToUpdate = _shippingAddressRepository.GetById(id);
+        if (placeToUpdate is null) 
+        { 
+            throw new Exception("Place with provided id does not exist");
+        }
 
-            var shippingAddress = _mapper.Map<ShippingAddress>(request);
-            shippingAddress.Id = id;
-            var res = _shippingAddressRepository.EditShippingAddress(shippingAddress);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        var shippingAddress = _mapper.Map<ShippingAddress>(request);
+        shippingAddress.Id = id;
+        var res = _shippingAddressRepository.EditShippingAddress(shippingAddress);
+        return true;
     }
 
     public bool DeleteShippingAddress(Guid id)
