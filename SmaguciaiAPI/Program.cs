@@ -54,6 +54,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 builder.Services.AddScoped<IOrderProductService, OrderProductService>();
+builder.Services.AddScoped<IDiscountCodeRepository, DiscountCodeRepository>();
+builder.Services.AddScoped<IDiscountCodeService, DiscountCodeService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var jwtSettings = builder.Services.BuildServiceProvider().GetService<JwtSettings>();
