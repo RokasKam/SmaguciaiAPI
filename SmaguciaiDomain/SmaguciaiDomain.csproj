@@ -10,4 +10,9 @@
       <Folder Include="Exeptions\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Stripe" Version="1.12.0" />
+      <PackageReference Include="Stripe.net" Version="43.7.0" />
+    </ItemGroup>
+
 </Project>
