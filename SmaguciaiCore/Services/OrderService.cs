@@ -11,18 +11,12 @@ public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
-    
+
     public OrderService(IOrderRepository orderRepository, IMapper mapper)
     {
         _orderRepository = orderRepository;
         _mapper = mapper;
     }
-    public Guid GetByUserId(Guid id)
-    {
-        var orderId = _orderRepository.GetByUserId(id);
-        return orderId;
-    }
-    
     public OrderResponse GetById(Guid id)
     {
         var order = _orderRepository.GetById(id);
@@ -30,7 +24,7 @@ public class OrderService : IOrderService
         return orderResponse;
     }
 
-    public bool AddNewOrder(OrderRequest orderRequest)
+    public Guid AddNewOrder(OrderRequest orderRequest)
     {
         var order = _mapper.Map<Order>(orderRequest);
         var res = _orderRepository.AddNewOrder(order);

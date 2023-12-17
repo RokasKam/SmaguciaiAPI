@@ -4,7 +4,7 @@ namespace SmaguciaiCore.Interfaces.Repositories;
 
 public interface IOrderRepository
 {
-    Guid GetByUserId(Guid id);
-    bool AddNewOrder (Order order);
+    Guid AddNewOrder (Order order);
     Order GetById(Guid id);
+    bool UpdatePayment(Guid guid);
 }

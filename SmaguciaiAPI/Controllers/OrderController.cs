@@ -15,9 +15,9 @@ public class OrderController : BaseController
         _orderService = orderService;
     }
     [HttpGet("{id:guid}")]
-    public IActionResult GetIdByUserId(Guid id)
+    public IActionResult GetIdById(Guid id)
     {
-        return Ok(_orderService.GetByUserId(id));
+        return Ok(_orderService.GetById(id));
     }
     [HttpPost]
     public IActionResult AddNewOrder(OrderRequest request)

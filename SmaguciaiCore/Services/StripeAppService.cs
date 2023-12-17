@@ -69,13 +69,14 @@ namespace SmaguciaiCore.Services
                 ReceiptEmail = createdCustomer.Email,
                 Description = "Paid for order: " + customer.OrderId.ToString(),
                 Currency = "EUR",
-                Amount = (long)order.WholePrice
+                Amount = (long)order.WholePrice * 100
             };
 
             // Create the payment
             var createdPayment = await _chargeService.CreateAsync(paymentOptions, null, ct);
 
             // Return the payment to requesting method
+            _orderRepository.UpdatePayment(customer.OrderId);
             return new StripePayment(
                 createdPayment.CustomerId,
                 createdPayment.ReceiptEmail,
