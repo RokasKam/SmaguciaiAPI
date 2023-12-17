@@ -14,6 +14,12 @@ public class CategoryRepository : ICategoryRepository
     {
         _dbContext = dbContext;
     }
+    
+    public Category GetById(Guid id)
+    {
+        var category = _dbContext.Categories.FirstOrDefault(u => u.Id == id);
+        return category;  
+    }
 
     public List<Category> GetAll()
     {

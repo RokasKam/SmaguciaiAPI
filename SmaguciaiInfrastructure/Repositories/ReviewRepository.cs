@@ -17,7 +17,7 @@ public class ReviewRepository : IReviewRepository
         _discountCodeEmailService = discountCodeEmailService;
     }
     
-    public bool AddNewReview(User user, Review review)
+    public bool AddNewReview(User user, Review review, Product product)
     {
             review.Id = Guid.NewGuid();
             review.DateAdded = DateTime.Now;
@@ -29,6 +29,19 @@ public class ReviewRepository : IReviewRepository
             {
                 _dbContext.Entry(local).State = EntityState.Detached;
             }
+            
+            var localP = _dbContext.Products.Local.FirstOrDefault(oldEntity => oldEntity.Id == product.Id);
+            if (localP != null)
+            {
+                _dbContext.Entry(localP).State = EntityState.Detached;
+            }
+
+            product.RatingAmount++;
+            decimal average = (product.RatingAverage * (product.RatingAmount-1) + review.Rating) / product.RatingAmount;
+            product.RatingAverage = average;
+            
+            _dbContext.Entry(product).State = EntityState.Modified;
+            _dbContext.SaveChanges();
 
             user.ReviewCount++;
             if (user.ReviewCount >= 10)
@@ -63,18 +76,20 @@ public class ReviewRepository : IReviewRepository
         return review;  
     }
     
-    public bool EditReview(Review review)
+    public bool EditReview(Review oldReview, Review newReview, Product product)
     {
         try
         {
-            var local = _dbContext.Review.Local.FirstOrDefault(oldEntity => oldEntity.Id == review.Id);
-            if (local != null)
-            {
-                _dbContext.Entry(local).State = EntityState.Detached;
-            }
-
-            _dbContext.Entry(review).State = EntityState.Modified;
+            decimal oldTotalRating = product.RatingAverage * product.RatingAmount;
+            decimal newTotalRating = oldTotalRating - oldReview.Rating + newReview.Rating;
+            product.RatingAverage = newTotalRating / product.RatingAmount;
+            newReview.DateAdded = oldReview.DateAdded;
+            _dbContext.Entry(oldReview).CurrentValues.SetValues(newReview);
             _dbContext.SaveChanges();
+            
+            _dbContext.Entry(product).State = EntityState.Modified;
+            _dbContext.SaveChanges();
+
             return true;
         }
         catch
@@ -82,6 +97,7 @@ public class ReviewRepository : IReviewRepository
             return false;
         }
     }
+
     
     public List<Review> GetReviewsByProductId(Guid productId)
     {
@@ -97,19 +113,29 @@ public class ReviewRepository : IReviewRepository
             .ToList();
     }
     
-    public bool DeleteReview(Guid id)
+    public bool DeleteReview(Review review, Product product)
     {
         try
         {
-            var place = _dbContext.Review.SingleOrDefault(entity => entity.Id == id);
-
-            if (place is null)
+            decimal oldRating = review.Rating;
+            _dbContext.Review.Remove(review);
+            
+            product.RatingAmount--;
+            if (product.RatingAmount > 0)
             {
-                throw new Exception("Place not found");
+                decimal average = (product.RatingAverage * (product.RatingAmount + 1) - oldRating) /
+                                  product.RatingAmount;
+                product.RatingAverage = average;
+            }
+            else
+            {
+                product.RatingAmount = 0;
+                product.RatingAverage = 0;
             }
 
-            _dbContext.Review.Remove(place);
+            _dbContext.Entry(product).State = EntityState.Modified;
             _dbContext.SaveChanges();
+
             return true;
         }
         catch
@@ -117,4 +143,5 @@ public class ReviewRepository : IReviewRepository
             return false;
         }
     }
+
 }

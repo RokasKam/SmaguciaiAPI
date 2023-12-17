@@ -15,6 +15,11 @@ public class ManufacturerRepository : IManufacturerRepository
         _dbContext = dbContext;
     }
 
+    public Manufacturer GetById(Guid id)
+    {
+        var manufacturer = _dbContext.Manufacturers.FirstOrDefault(u => u.Id == id);
+        return manufacturer;  
+    }
     public List<Manufacturer> GetAll()
     {
         

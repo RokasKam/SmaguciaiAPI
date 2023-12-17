@@ -12,18 +12,21 @@ public class ReviewService : IReviewService
     private readonly IReviewRepository _reviewRepository;
     private readonly IMapper _mapper;
     private readonly IUserRepository _userRepository;
-    public ReviewService(IReviewRepository reviewRepository, IMapper mapper, IUserRepository userRepository)
+    private readonly IProductRepository _productRepository;
+    public ReviewService(IReviewRepository reviewRepository, IMapper mapper, IUserRepository userRepository, IProductRepository productRepository)
     {
         _reviewRepository = reviewRepository;
         _mapper = mapper;
         _userRepository = userRepository;
+        _productRepository = productRepository;
     }
     
     public bool AddNewReview(ReviewRequest request)
     {
         var review = _mapper.Map<Review>(request);
         var user = _userRepository.GetById(request.UserId);
-        var res = _reviewRepository.AddNewReview(user, review);
+        var product = _productRepository.GetById(request.ProductId);
+        var res = _reviewRepository.AddNewReview(user, review, product);
         return res;
     }
 
@@ -38,15 +41,17 @@ public class ReviewService : IReviewService
     {
         try
         {
-            var placeToUpdate = _reviewRepository.GetById(id);
-            if (placeToUpdate is null)
+            var oldReview = _reviewRepository.GetById(id);
+            if (oldReview is null)
             {
-                throw new Exception("Place with provided id does not exist");
+                throw new Exception("Review with provided id does not exist");
             }
 
-            var product = _mapper.Map<Review>(request);
-            product.Id = id;
-            var res = _reviewRepository.EditReview(product);
+            var newReview = _mapper.Map<Review>(request);
+            newReview.Id = id;
+            var product = _productRepository.GetById(request.ProductId);
+
+            var res = _reviewRepository.EditReview(oldReview, newReview, product);
             return true;
         }
         catch
@@ -54,6 +59,7 @@ public class ReviewService : IReviewService
             return false;
         }
     }
+
     
     public List<ReviewResponse> GetReviewsByProductId(Guid productId)
     {
@@ -71,13 +77,25 @@ public class ReviewService : IReviewService
     {
         try
         {
-            _reviewRepository.DeleteReview(id);
-            return true;
+            var reviewToDelete = _reviewRepository.GetById(id);
+            if (reviewToDelete == null)
+            {
+                throw new Exception("Review not found");
+            }
+
+            var product = _productRepository.GetById(reviewToDelete.ProductID);
+            if (product == null)
+            {
+                throw new Exception("Product not found");
+            }
+
+            return _reviewRepository.DeleteReview(reviewToDelete, product);
         }
         catch
         {
             return false;
         }
     }
+
 
 }

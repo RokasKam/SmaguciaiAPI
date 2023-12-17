@@ -18,4 +18,10 @@ public class ManufacturerController : BaseController
     {
         return Ok(_manufacturerService.GetAll());
     }
+    
+    [HttpGet("{id:guid}")]
+    public IActionResult GetById(Guid id)
+    {
+        return Ok(_manufacturerService.GetById(id));
+    }
 }

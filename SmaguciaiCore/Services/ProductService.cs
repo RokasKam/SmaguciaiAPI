@@ -10,12 +10,16 @@ namespace SmaguciaiCore.Services;
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly IManufacturerRepository _manufacturerRepository;
     private readonly IMapper _mapper;
     
-    public ProductService(IProductRepository productRepository, IMapper mapper)
+    public ProductService(IProductRepository productRepository, IMapper mapper, ICategoryRepository categoryRepository, IManufacturerRepository manufacturerRepository)
     {
         _productRepository = productRepository;
         _mapper = mapper;
+        _categoryRepository = categoryRepository;
+        _manufacturerRepository = manufacturerRepository;
     }
     
     public ProductResponse GetById(Guid id)
@@ -28,7 +32,9 @@ public class ProductService : IProductService
     public Guid AddNewProduct(ProductRequest request)
     {
         var product = _mapper.Map<Product>(request);
-        var res = _productRepository.AddNewProduct(product);
+        var category = _categoryRepository.GetById(request.CategoryId);
+        var manufacturer = _manufacturerRepository.GetById(request.ManufacturerId);
+        var res = _productRepository.AddNewProduct(product, category, manufacturer);
         return res;
     }
     public bool EditProduct(Guid id,ProductRequest request)
@@ -56,7 +62,24 @@ public class ProductService : IProductService
     {
         try
         {
-            _productRepository.DeleteProduct(id);
+            var productToDelete = _productRepository.GetById(id);
+            if (productToDelete == null)
+            {
+                throw new Exception("Product not found");
+            }
+
+            var category = _categoryRepository.GetById(productToDelete.CategoryId);
+            if (category == null)
+            {
+                throw new Exception("Category not found");
+            }
+            var manufacturer = _manufacturerRepository.GetById(productToDelete.ManufacturerId);
+            if (manufacturer == null)
+            {
+                throw new Exception("Category not found");
+            }
+            
+            _productRepository.DeleteProduct(productToDelete, category, manufacturer);
             return true;
         }
         catch
