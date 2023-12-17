@@ -1,6 +1,8 @@
 using System;
+using SmaguciaiCore.Interfaces.Repositories;
 using Stripe;
 using SmaguciaiCore.Interfaces.Services;
+using SmaguciaiDomain.Entities;
 using Stripe_Payments_Web_Api.Models.Stripe;
 
 namespace SmaguciaiCore.Services
@@ -10,24 +12,29 @@ namespace SmaguciaiCore.Services
         private readonly ChargeService _chargeService;
         private readonly CustomerService _customerService;
         private readonly TokenService _tokenService;
+        private readonly IOrderRepository _orderRepository;
+
 
         public StripeAppService(
             ChargeService chargeService,
             CustomerService customerService,
-            TokenService tokenService)
+            TokenService tokenService,
+            IOrderRepository orderRepository)
         {
             _chargeService = chargeService;
             _customerService = customerService;
             _tokenService = tokenService;
+            _orderRepository = orderRepository;
         }
 
         /// <summary>
-        /// Create a new customer at Stripe through API using customer and card details from records.
+        /// Add a new payment at Stripe using Customer and Payment details.
+        /// Customer has to exist at Stripe already.
         /// </summary>
-        /// <param name="customer">Stripe Customer</param>
+        /// <param name="payment">Stripe Payment</param>
         /// <param name="ct">Cancellation Token</param>
-        /// <returns>Stripe Customer</returns>
-        public async Task<StripeCustomer> AddStripeCustomerAsync(AddStripeCustomer customer, CancellationToken ct)
+        /// <returns><Stripe Payment/returns>
+        public async Task <StripePayment> AddStripePaymentAsync(AddStripeCustomer customer, CancellationToken ct) 
         {
             // Set Stripe Token options based on customer data
             TokenCreateOptions tokenOptions = new TokenCreateOptions
@@ -41,10 +48,10 @@ namespace SmaguciaiCore.Services
                     Cvc = customer.CreditCard.Cvc
                 }
             };
-
+            
             // Create new Stripe Token
             Token stripeToken = await _tokenService.CreateAsync(tokenOptions, null, ct);
-
+            
             // Set Customer options using
             CustomerCreateOptions customerOptions = new CustomerCreateOptions
             {
@@ -52,32 +59,17 @@ namespace SmaguciaiCore.Services
                 Email = customer.Email,
                 Source = stripeToken.Id
             };
-
+            
             // Create customer at Stripe
             Customer createdCustomer = await _customerService.CreateAsync(customerOptions, null, ct);
-
-            // Return the created customer at stripe
-            return new StripeCustomer(createdCustomer.Name, createdCustomer.Email,createdCustomer.Id);
-        }
-
-
-
-        /// <summary>
-        /// Add a new payment at Stripe using Customer and Payment details.
-        /// Customer has to exist at Stripe already.
-        /// </summary>
-        /// <param name="payment">Stripe Payment</param>
-        /// <param name="ct">Cancellation Token</param>
-        /// <returns><Stripe Payment/returns>
-        public async Task <StripePayment> AddStripePaymentAsync(AddStripePayment payment, CancellationToken ct) 
-        {
+            Order order = _orderRepository.GetById(customer.OrderId);
             // Set the options for the payment we would like to create at Stripe
             ChargeCreateOptions paymentOptions = new ChargeCreateOptions {
-                Customer = payment.CustomerId,
-                ReceiptEmail = payment.ReceiptEmail,
-                Description = payment.Description,
-                Currency = payment.Currency,
-                Amount = payment.Amount
+                Customer = createdCustomer.Id,
+                ReceiptEmail = createdCustomer.Email,
+                Description = "Paid for order: " + customer.OrderId.ToString(),
+                Currency = "EUR",
+                Amount = (long)order.WholePrice
             };
 
             // Create the payment

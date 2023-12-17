@@ -2,6 +2,7 @@ using AutoMapper;
 using SmaguciaiCore.Interfaces.Repositories;
 using SmaguciaiCore.Interfaces.Services;
 using SmaguciaiCore.Requests.Order;
+using SmaguciaiCore.Responses.Order;
 using SmaguciaiDomain.Entities;
 
 namespace SmaguciaiCore.Services;
@@ -20,6 +21,13 @@ public class OrderService : IOrderService
     {
         var orderId = _orderRepository.GetByUserId(id);
         return orderId;
+    }
+    
+    public OrderResponse GetById(Guid id)
+    {
+        var order = _orderRepository.GetById(id);
+        var orderResponse = _mapper.Map<OrderResponse>(order);
+        return orderResponse;
     }
 
     public bool AddNewOrder(OrderRequest orderRequest)
