@@ -7,4 +7,5 @@ namespace SmaguciaiCore.Interfaces.Services;
 public interface IManufacturerService
 {
     List<ManufacturerResponse> GetAll();
+    ManufacturerResponse GetById(Guid id);
 }

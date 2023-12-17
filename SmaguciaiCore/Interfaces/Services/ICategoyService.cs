@@ -7,4 +7,5 @@ namespace SmaguciaiCore.Interfaces.Services;
 public interface ICategoryService
 {
     List<CategoyResponse> GetAll();
+    CategoyResponse GetById(Guid id);
 }

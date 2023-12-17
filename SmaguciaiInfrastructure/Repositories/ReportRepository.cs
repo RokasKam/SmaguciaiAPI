@@ -14,12 +14,22 @@ public class ReportRepository : IReportRepository
         _dbContext = dbContext;
     }
     
-    public bool AddNewReport(Report report)
+    public bool AddNewReport(Report report, Review review)
     {
         report.Id = Guid.NewGuid();
         report.DateAdded = DateTime.Now;
         _dbContext.Reports.Add(report);
         _dbContext.SaveChanges();
+        
+        var localP = _dbContext.Review.Local.FirstOrDefault(oldEntity => oldEntity.Id == review.Id);
+        if (localP != null)
+        {
+            _dbContext.Entry(localP).State = EntityState.Detached;
+        }
+        review.Reported = true;
+        _dbContext.Entry(review).State = EntityState.Modified;
+        _dbContext.SaveChanges();
+        
         return true;
     }
 

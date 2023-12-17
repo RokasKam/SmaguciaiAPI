@@ -6,4 +6,5 @@ namespace SmaguciaiCore.Interfaces.Repositories;
 public interface IManufacturerRepository
 {
     List<Manufacturer> GetAll();
+    Manufacturer GetById(Guid id);
 }

@@ -7,11 +7,11 @@ public interface IProductRepository
 {
     
     Product GetById(Guid id);
-    Guid AddNewProduct(Product product);
+    Guid AddNewProduct(Product product, Category category, Manufacturer manufacturer);
 
     bool EditProduct(Product product);
 
-    bool DeleteProduct(Guid id);
+    bool DeleteProduct(Product product, Category category, Manufacturer manufacturer);
     
     IEnumerable<Product> GetAll(ProductParameters productParameters);
 }

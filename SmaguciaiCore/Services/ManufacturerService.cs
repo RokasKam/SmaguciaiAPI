@@ -23,4 +23,11 @@ public class ManufacturerService : IManufacturerService
         var manufacturersToList = manufacturers.Select(x => _mapper.Map<ManufacturerResponse>(x)).ToList();
         return manufacturersToList;
     }
+    
+    public ManufacturerResponse GetById(Guid id)
+    {
+        var manufacturer = _manufacturerRepository.GetById(id);
+        var response = _mapper.Map<ManufacturerResponse>(manufacturer);
+        return response;
+    }
 }

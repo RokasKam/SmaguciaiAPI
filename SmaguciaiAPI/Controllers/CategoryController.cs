@@ -18,4 +18,10 @@ public class CategoryController : BaseController
     {
         return Ok(_categoryService.GetAll());
     }
+    
+    [HttpGet("{id:guid}")]
+    public IActionResult GetById(Guid id)
+    {
+        return Ok(_categoryService.GetById(id));
+    }
 }

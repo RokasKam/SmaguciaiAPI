@@ -6,4 +6,5 @@ namespace SmaguciaiCore.Interfaces.Repositories;
 public interface ICategoryRepository
 {
     List<Category> GetAll();
+    Category GetById(Guid id);
 }

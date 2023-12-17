@@ -24,4 +24,11 @@ public class CategoryService : ICategoryService
         var categoryresposelist = categories.Select(x => _mapper.Map<CategoyResponse>(x)).ToList();
         return categoryresposelist;
     }
+    
+    public CategoyResponse GetById(Guid id)
+    {
+        var category = _categoryRepository.GetById(id);
+        var response = _mapper.Map<CategoyResponse>(category);
+        return response;
+    }
 }

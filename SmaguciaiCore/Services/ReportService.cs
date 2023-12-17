@@ -10,18 +10,21 @@ namespace SmaguciaiCore.Services;
 public class ReportService : IReportService
 {
     private readonly IReportRepository _reportRepository;
+    private readonly IReviewRepository _reviewRepository;
     private readonly IMapper _mapper;
     
-    public ReportService(IReportRepository reportRepository, IMapper mapper)
+    public ReportService(IReportRepository reportRepository, IMapper mapper, IReviewRepository reviewRepository)
     {
         _reportRepository = reportRepository;
+        _reviewRepository = reviewRepository;
         _mapper = mapper;
     }
     
     public bool AddNewReport(ReportRequest request)
     {
         var report = _mapper.Map<Report>(request);
-        var res = _reportRepository.AddNewReport(report);
+        var review = _reviewRepository.GetById(request.ReviewId);
+        var res = _reportRepository.AddNewReport(report, review);
         return res;
     }
 
