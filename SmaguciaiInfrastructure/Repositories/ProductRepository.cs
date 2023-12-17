@@ -22,21 +22,14 @@ public class ProductRepository : IProductRepository
         return product;
     }
     
-    public bool AddNewProduct(Product product)
+    public Guid AddNewProduct(Product product)
     {
-        try
-        {
-            product.Id = Guid.NewGuid();
-            product.RatingAmount = 0;
-            product.RatingAverage = 0;
-            _dbContext.Products.Add(product);
-            _dbContext.SaveChanges();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        product.Id = Guid.NewGuid();
+        product.RatingAmount = 0;
+        product.RatingAverage = 0;
+        _dbContext.Products.Add(product);
+        _dbContext.SaveChanges();
+        return product.Id;
     }
     public bool EditProduct(Product product)
     {

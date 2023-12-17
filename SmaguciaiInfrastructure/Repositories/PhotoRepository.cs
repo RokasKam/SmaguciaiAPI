@@ -18,38 +18,25 @@ public class PhotoRepository : IPhotoRepository
     
     public bool AddNewPhoto(Photo photo)
     {
-        try
-        {
-            Product product = _dbContext.Products.Local.FirstOrDefault(oldEntity => oldEntity.Id == photo.ProductId);
-            var Photos = GetAll(product.Id);
+        var Photos = GetAll(photo.ProductId);
             
-            if (product != null)
-            {
-                _dbContext.Entry(product).State = EntityState.Detached;
-            }
-            photo.Product = product;
-            if (Photos.Count() == 0)
-            {
-                photo.IsMain = true;
-            }
-            else
-            {
-                photo.IsMain = false;
-            }
-            _dbContext.Photos.Add(photo);
-            _dbContext.SaveChanges();
-            return true;
-        }
-        catch
+        if (Photos.Count() == 0)
         {
-            return false;
+            photo.IsMain = true;
         }
+        else
+        {
+            photo.IsMain = false;
+        }
+        _dbContext.Photos.Add(photo);
+        _dbContext.SaveChanges();
+        return true;
     }
     
     public IEnumerable<Photo> GetAll(Guid productid)
     {
         
-        IQueryable<Photo> entities = _dbContext.Photos;
+        IQueryable<Photo> entities = _dbContext.Photos.Where(p=>p.ProductId == productid);
 
         return entities.ToList();
     }

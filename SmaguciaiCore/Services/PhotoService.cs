@@ -26,7 +26,7 @@ public class PhotoService : IPhotoService
         var photo = _mapper.Map<Photo>(request);
         var productName =  _productRepository.GetById(photo.ProductId).Name;
         Stream imageStream = _imageService.ConvertBase64ToStream(photo.URL);
-        string imageFromFirebase = await _imageService.UploadImage(imageStream, productName);
+        string imageFromFirebase = await _imageService.UploadImage(imageStream, Guid.NewGuid().ToString());
         photo.URL = imageFromFirebase;
         var res = _photoRepository.AddNewPhoto(photo);
         return res;

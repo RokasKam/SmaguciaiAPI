@@ -25,7 +25,7 @@ public class ProductService : IProductService
         return productResponse;
     }
     
-    public bool AddNewProduct(ProductRequest request)
+    public Guid AddNewProduct(ProductRequest request)
     {
         var product = _mapper.Map<Product>(request);
         var res = _productRepository.AddNewProduct(product);

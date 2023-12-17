@@ -6,7 +6,7 @@ namespace SmaguciaiCore.Interfaces.Services;
 
 public interface IProductService
 {
-    bool AddNewProduct(ProductRequest request);
+    Guid AddNewProduct(ProductRequest request);
     bool EditProduct(Guid id,ProductRequest request);
     
     ProductResponse GetById(Guid id);
