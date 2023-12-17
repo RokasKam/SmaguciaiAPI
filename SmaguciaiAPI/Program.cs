@@ -11,12 +11,15 @@ using SmaguciaiCore.Interfaces.Services;
 using SmaguciaiCore.Services;
 using SmaguciaiInfrastructure.ExternalServices;
 using SmaguciaiInfrastructure.Repositories;
+using Stripe;
+using ProductService = SmaguciaiCore.Services.ProductService;
+using ReviewService = SmaguciaiCore.Services.ReviewService;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripeSettings:SecretKey");
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -54,6 +57,10 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 builder.Services.AddScoped<IOrderProductService, OrderProductService>();
+builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<ChargeService>();
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IStripeAppService, StripeAppService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var jwtSettings = builder.Services.BuildServiceProvider().GetService<JwtSettings>();

@@ -9,6 +9,8 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="12.0.1" />
       <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.1" />
+      <PackageReference Include="Stripe" Version="1.12.0" />
+      <PackageReference Include="Stripe.net" Version="43.7.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.1" />
     </ItemGroup>
 

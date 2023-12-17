@@ -17,7 +17,14 @@ public class OrderRepository : IOrderRepository
         var order = _dbContext.Orders.FirstOrDefault(o => o.UserId == id);
         return order.Id;  
     }
+    
+    public Order GetById(Guid id)
+    {
+        var order = _dbContext.Orders.FirstOrDefault(x => x.Id == id);
 
+        return order;
+    }
+    
     public bool AddNewOrder(Order order)
     {
         order.Id = Guid.NewGuid();
